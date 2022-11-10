@@ -1,0 +1,104 @@
+use pelis_estreno
+db.createCollection('director')
+db.createCollection('pelicula')
+db.createCollection('estreno')
+
+
+INSERTS
+
+----director
+db.director.insertOne({_id: 1, nombre: 'Tim Burton', ocupacion: 'director de cine, productor, escritor y dibujante', peliculas: 'Batman, Beetlejuice, El joven manos de tijeras', nacionalidad: 'Estadounidense'})
+db.director.insertOne({_id: 2, nombre: 'Neil Jordan', ocupacion: 'director de cine y novelista', peliculas: 'El juego de las lagrimas, La viuda, Entrevista con el vampiro', nacionalidad: 'irlandés' })
+db.director.insertOne({_id: 3, nombre: 'Martin Charles Scorsese', ocupacion: 'director, guionista y productor de cine', peliculas: 'Buenos muchachos, Taxi Driver, El Lobo de Wall Street', nacionalidad: 'estadounidense'})
+db.director.insertOne({_id: 4, nombre: 'Steven Spielberg', ocupacion: 'director, guionista y productor de cine', peliculas: 'Tiburon, Parque Jurasico, E.T., el extraterrestre', nacionalidad: 'estadounidense'})
+db.director.insertOne({_id: 5, nombre: 'Quentin Tarantino', ocupacion: 'director de cine, productor, guionista, editor y actor', peliculas: 'Kill Bill, Bastardos sin gloria, Tiempos violentos', nacionalidad: 'estadounidense'})
+db.director.insertOne({_id: 6, nombre: 'Michael Bay', ocupacion: 'cineasta', peliculas: 'Transformers, Ambulance, Armagedon', nacionalidad: 'estadounidense'})
+
+---- peliculas
+db.pelicula.insertOne( {_id: 1, nombre: 'El joven manos de tijera', genero: 'fantasia romatica', actor_princ: 'Johnny Deep', duracion: 126 })
+db.pelicula.insertOne({_id: 2, nombre: 'Entrevista con el vampiro', genero: 'suspenso, drama, romance', actor_princ: 'Tom Cruice y Brad Pitt', duracion: 122 })
+db.pelicula.insertOne({_id: 3, nombre: 'Beetlejuice', genero: 'comedia, fantasia', actor_princ: 'Winona Ryder y Michael Keaton', duracion: 92 })
+db.pelicula.insertOne( {_id: 4, nombre: 'Transformers', genero: 'accion, ficcion', actor_princ: 'Shia LaBeouf', duracion: 144 }) 
+db.pelicula.insertOne({_id: 5, nombre: 'Tom y Jerry', genero: 'aventura, comedia, familiar', actor_princ: 'Tom y Jerry', duracion: 101 })
+db.pelicula.insertOne({_id: 6, nombre: 'Kung Fu Panda', genero: 'infantil, animacion, aventura', actor_princ: 'panda Po', duracion: 91 })
+
+--estreno
+db.estreno.insertOne({_id: 1, pelicula: 'El joven manos de tijera', año_estreno: 1990, recaudacion:'86 millones USD', lugar_estreno:'Estados Unidos', plataforma:'Disney+'}) 
+db.estreno.insertOne({_id: 2, pelicula: 'Entrevista con el vampiro', año_estreno: 1994, recaudacion:'223,7 millones USD', lugar_estreno:'Estados Unidos', plataforma:'HBOmax'}) 
+db.estreno.insertOne({_id: 3, pelicula: 'Beetlejuice', año_estreno: 1988, recaudacion:'74,2 millones USD', lugar_estreno:'Estados Unidos', plataforma:'HBOmax'}) 
+db.estreno.insertOne({_id: 4, pelicula: 'Transformers', año_estreno: 2007, recaudacion:'86 millones USD', lugar_estreno:'Estados Unidos', plataforma:'HBOmax' }) 
+db.estreno.insertOne({_id: 5, pelicula: 'Tom y Jerry', año_estreno: 2021, recaudacion:'136,5 millones USD', lugar_estreno:'Estados Unidos', plataforma:'HBOmax' }) 
+db.estreno.insertOne({_id: 6, pelicula: 'Kung Fu Panda', año_estreno: 2008, recaudacion:'631,7 millones USD', lugar_estreno:'Estados Unidos', plataforma:'Netflix'})
+
+
+
+CONSULTAS
+
+---- director
+db.director.find().pretty()
+db.director.find().limit(3)
+db.director.find({nacionalidad:'estadounidense'})
+db.director.find({nacionalidad:'Estadounidense'})
+db.director.find({ocupacion: 'director, guionista y productor de cine'})
+
+---- pelicula
+db.pelicula.findOne({duracion:92})
+db.pelicula.find().limit(2)
+db.pelicula.findOne()
+db.pelicula.find({_id:6})
+db.pelicula.find({nombre:'Transformers'})
+
+---- estreno
+db.estreno.find({año_estreno: 2007})
+db.estreno.find({año_estreno: {$gt: 2007}})
+db.estreno.find({año_estreno: {$gt: 2000}})
+db.estreno.find({año_estreno: {$gte: 2007}})
+db.estreno.find({año_estreno: {$gte: 2007}, plataforma: 'HBOmax'})
+
+
+UPDATE
+
+---- director
+db.director.update({'_id':1},{$set:{'peliculas':'Batman, Beetlejuice'}})
+db.director.update( { '_id': 2 }, { $set: { 'nacionalidad': 'irlandes' } })
+db.director.update( { '_id': 3 }, { $set: { 'peliculas': 'Buenos muchachos' } })
+db.director.update( { '_id': 4 }, { $set: { 'ocupacion': 'guionista y productor de cine' } })
+db.director.update( { '_id': 5 }, { $set: { 'nombre': 'Quentin Jerome Tarantino' } })
+db.director.update( { '_id': 1 }, { $set: { 'nacionalidad': 'estadounidense' } })
+db.director.update( { '_id': 5 }, { $set: { 'genero': 'aventura, comedia, animacion' } })
+db.director.update( { '_id': 6 }, { $set: { 'personaje_princ': 'Po, maestro Shifu, Tai Lung' } })
+
+
+---- coleccion pelicula
+
+db.pelicula.updateMany( {}, { $rename: { "actor_princ": "personaje_princ" } } )
+db.pelicula.update( { '_id': 1 }, { $set: { 'genero': 'fantasia, romance' } })
+db.pelicula.update( { '_id': 1 }, { $set: { 'personaje_princ': 'Johnny Deep y Winona Ryder' } })
+db.pelicula.update( { '_id': 2 }, { $set: { 'nombre': 'interview with the vampire' } })
+db.pelicula.update( { '_id': 3 }, { $set: { 'genero': 'comedia, fantasia, historia de fantasmas' } })
+db.pelicula.updateMany( { '_id': 4 }, { $set: { 'nombre': 'Transformers: El lado oscuro de la Luna', duracion: 154 } })
+db.pelicula.update( { '_id': 6 }, { $set: { 'personaje_princ': 'Po, maestro Shifu, Tai Lung' } })
+
+---- coleccion estreno
+db.estreno.update( { '_id': 1 }, { $set: { 'pelicula': 'Edward Scissorhands' } })
+db.estreno.update( { '_id': 2 }, { $set: { 'año_estreno': '1995' } })
+db.estreno.update( { '_id': 3 }, { $set: { 'recaudacion': '75 millones USD' } })
+db.estreno.update( { '_id': 4 }, { $set: { 'plataforma': 'Disney+' } })
+db.estreno.update( { '_id': 5 }, { $set: { 'plataforma': 'Amazon Prime' } })
+ db.estreno.update( { '_id': 6 }, { $set: { 'recaudacion': '632 millones USD' } })
+
+--------- consultas o verificacion de las actualizaciones
+db.estreno.find({'plataforma':'Disney+'}).sort({'_id':4}).pretty()
+db.estreno.find({'plataforma':'Disney+'}).sort({'_id':1}).pretty()
+
+
+ELIMINAR
+
+
+db.director.deleteOne({'_id':6})
+db.director.deleteOne({'_id':3})
+db.pelicula.deleteOne({'_id':2})
+db.pelicula.deleteOne({'_id':5})
+db.estreno.deleteOne({'pelicula':'Tom y Jerry'})
+
+ 
